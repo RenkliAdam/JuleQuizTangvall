@@ -1,194 +1,29 @@
-<!DOCTYPE html>
-<html lang="no">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JuleQuiz - 2024 - Tangvall Skole</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      color: #fff;
-      background: url('https://images.unsplash.com/photo-1607415967996-d5f9aab09b4e') no-repeat center center fixed;
-      background-size: cover;
-      text-align: center;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    .container {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-      max-width: 500px;
-      width: 90%;
-      animation: fadeIn 1s ease-in-out;
-    }
-    h1 {
-      font-size: 36px;
-      margin-bottom: 20px;
-      color: #ffcccb;
-    }
-    .question {
-      font-size: 20px;
-      margin-bottom: 15px;
-    }
-    .options button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 18px;
-      color: #fff;
-      background-color: #28a745;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .options button:hover {
-      background-color: #218838;
-      transform: scale(1.05);
-    }
-    #score {
-      font-size: 22px;
-      margin-top: 20px;
-      color: #ffcccb;
-    }
-    .correct {
-      background-color: #28a745 !important;
-    }
-    .incorrect {
-      background-color: #dc3545 !important;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  </style>
-
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <button id="restart-btn" onclick="restartGame()">🔄 Spill på nytt</button>
-
-  <h1>🎄 JuleQuiz 🎅</h1>
-  <script src="script.js"></script>
-  <div class="container">
-    <div class="question" id="question">Spørsmål vil vises her</div>
-    <div class="options" id="options"></div>
-    <div id="score"></div>
-  </div>
-
-  <script>
-    const questions = [
-      { question: "Hvilken klasse er best i Tangvall Skole?", options: ["9A", "9B", "9C", "Alle"], correct: "9B" },
-      { question: "Hvem bringer gaver på julaften?", options: ["RuneJakob", "Julenissen", "Aywar", "Andreas"], correct: "Julenissen" },
-      { question: "Hva heter den tradisjonelle norske julekaken?", options: ["Lapper", "Lefs", "Pepperkake", "Bursdagkake"], correct: "Pepperkake" },
-      { question: "Hvilket dyr trekker julenissen", options: ["Hamstere", "Reinsdyr", "Elefanter", "Maur"], correct: "Reinsdyr" },
-      { question: "Hvilken farge er tradisjonelt knyttet til julen?", options: ["Hvit", "Blå", "Rød", "Brun"], correct: "Rød" },
-      { question: "Hva spiser norske folk på julaften?", options: ["Pinnekjøtt", "Kebab", "Suppe", "Pizza"], correct: "Pinnekjøtt" },
-      { question: "Hva pynter vi til jul?", options: ["Sko", "Skole", "Juletreet", "Toalett"], correct: "Juletreet" },
-      { question: "Hva er et vanlig norsk julesang?", options: ["Ja, vi elsker", "vi tenner våre lykter", "Happy Birthday", "Bæ Bæ lille lam"], correct: "vi tenner våre lykter" },
-      { question: "Hvor mange reinsdyr har julenissen ifølge tradisjonen?", options: ["6", "8", "9", "10"], correct: "9" },
-      { question: "Hva er en typisk julefarge sammen med rød?", options: ["Svart", "Grønn", "Blå", "Lilla"], correct: "Grønn" },
-      { question: "Hva kalles 24. desember?", options: ["1. Påske dag", "Juleaften", "Kebab Dagen", "Samedag"], correct: "Juleaften" },
-      { question: "Hvem bor på Nordpolen ifølge myten?", options: ["Eivind", "Julenissen", "Jesper", "Sverre"], correct: "Julenissen" },
-      { question: "Hva heter julenissens kone?", options: ["Jonas Gahr Støre ", "Shad", "Mrs. Claus", "Tønnes Hauge"], correct: "Mrs. Claus" },
-      { question: "Hva bruker vi til å pakke inn julegaver?", options: ["Kebabpapir (fra campino)", "Aluminiumsfolie", "Gavepapir", "Bølgepapp"], correct: "Gavepapir" },
-      { question: "Hva heter reinsdyrene til julenissen?", options: ["vilnus", "Donner", "Johnny Sins", "dag sigmund"], correct: "Donner" }, 
-      { question: "Hva slags lys brukes ofte i adventstiden?", options: ["Stearinlys", "Lommelykter", "Fekkel", "LED-lys"], correct: "Stearinlys" },
-      { question: "Hvor Julenissen kommer fra?", options: ["Same", "Tyrkia", "USA", "Pakistan"], correct: "Tyrkia" },
-      { question: "Hvem er Julenissen på ekte?", options: ["Mahmoud(9C)", "Adreas(9B)", "Sigfrid", "Elias(9C)"], correct: "Elias(9C)" },
-      { question: "Hvem feirer ikke jul?", options: ["Kristne", "Atif", "Muslimer", "Jøder"], correct: "Muslimer" },
-      { question: "Hvem er kuleste på skolen?", options: ["Mohammed", "Muhammed", "Muhamed", "Mohamad"], correct: "Muhammed" },
-    ];
-
-    let currentQuestion = 0;
-    let score = 0;
-
-    const questionElement = document.getElementById("question");
-    const optionsElement = document.getElementById("options");
-    const scoreElement = document.getElementById("score");
-
-    function loadQuestion() {
-      const current = questions[currentQuestion];
-      questionElement.textContent = current.question;
-      optionsElement.innerHTML = "";
-
-      current.options.forEach(option => {
-        const button = document.createElement("button");
-        button.textContent = option;
-        button.onclick = () => checkAnswer(button, option);
-        optionsElement.appendChild(button);
-      });
-    }
-
-    function checkAnswer(button, answer) {
-      if (answer === questions[currentQuestion].correct) {
-        button.classList.add("correct");
-        score++;
-      } else {
-        button.classList.add("incorrect");
-      }
-
-      setTimeout(() => {
-        currentQuestion++;
-        if (currentQuestion < questions.length) {
-          loadQuestion();
-        } else {
-          showScore();
-        }
-      }, 1000);
-    }
-
-    function showScore() {
-     questionElement.textContent = "🎉 Quiz Ferdig God Jul! 🎉";
-      optionsElement.innerHTML = "";
-      scoreElement.textContent = `Din poengsum: ${score} / ${questions.length}`;
-    }
-
-    loadQuestion();
-  </script>
-</body>
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>God Jul!</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      background: linear-gradient(to bottom right, #ff0000, #008000, #ffffff);
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      text-align: center;
-    }
-    h1 {
-      font-size: 3rem;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-    }
-    p {
-      font-size: 1.5rem;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div>
-    <h1>🎄 God Jul og Godt Nyttår! 🎅</h1>
-    <p>Lagt av Muhammed i Tangvall Skole!</p>
-    <h6>Copyright © 2024 JuleQuiz (Muhammed 9B)</h6>
-  </div>
-</body>
-</html>
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  background: linear-gradient(to bottom right, #ff0000, #008000, #ffffff); /* Kırmızı, Yeşil ve Beyaz gradyan */
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#restart-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#restart-btn:hover {
+  background-color: #218838;
+}
